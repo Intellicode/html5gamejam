@@ -4,25 +4,32 @@
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
     <title>Box2DJS - Physics Engine for JavaScript</title> 
     <script src="box2d.js"></script> 
-    <script src='demos/draw_world.js'></script> 
-    <script src='demos/demo_base.js'></script> 
-    <script src='demos/top.js'></script> 
-    <script src='demos/stack.js'></script> 
-    <script src='demos/compound.js'></script> 
-    <script src='demos/pendulum.js'></script> 
-    <script src='demos/crank.js'></script> 
-    <script src='demos/demos.js'></script> 
- 
-    <script src='style/prettify.js'></script> 
-		<link href="style/prettify.css" rel="stylesheet" type="text/css" /> 
-		<script>Event.observe(window, 'load', function() {prettyPrint()});</script> 
- 
-		<link href="style/distant-planet.css" rel="stylesheet" type="text/css" /> 
-		<link href="style/box2d.css" rel="stylesheet" type="text/css" /> 
+    <script src='game/monkeyvscoconut.js'></script> 
+	<link href="style/style.css" rel="stylesheet" type="text/css" /> 
   </head> 
 <body> 
+<img class="asset" id="coconutAsset" src="assets/coconut.png">
+<img class="asset" id="grassAsset" src="assets/grass.png">
+<img class="asset" id="monkeyAsset" src="assets/monkey.png">
+<img class="asset" id="brickAsset" src="assets/brick.png">
 <div id="container"> 
-    <canvas id="canvas" width='500' height='300' style="top:260px; left:125px;"></canvas> 
+    <img src="assets/logo.png" id="logo">
+    <div id="canvasContainer">
+        <canvas id="canvas" width='480' height='315' ></canvas> 
+        <div id="overlay">
+            <span id="scoreLabel">Score: <span id="score"></span></span>
+             <span id="levelLabel">Level: <span id="level"></span></span>
+             <a id="readyButton">Ready</a>
+        </div>
+        <div id="lose">
+            <h1>Hahaha NOOB, try again?</h1>
+        </div>
+         <div id="win">
+            <h1>Nice...next level!</h1>
+        </div>
+    </div>
 </div>
+
+
 </body> 
-</html> 
+</html>

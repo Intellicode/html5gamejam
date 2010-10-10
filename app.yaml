@@ -1,9 +1,12 @@
-application: html5gamejam
+application: html5gamejamnl
 version: 1
 runtime: python
 api_version: 1
 
 handlers:
+- url: /
+  static_files: index.html
+  upload: index.html
 - url: /(.*\.(gif|png|jpg|html|js|css))
   static_files: \1
-  upload: (.*\.(gif|png|jpg|html|js))
+  upload: (.*\.(gif|png|jpg|html|js|css))
