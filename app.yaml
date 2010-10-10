@@ -7,6 +7,6 @@ handlers:
 - url: /
   static_files: index.html
   upload: index.html
-- url: /(.*\.(gif|png|jpg|html|js|css|eot|svg|ttf|woff))
+- url: /(.*\.(gif|png|jpg|html|js|css|eot|svg|ttf|woff|ico))
   static_files: \1
-  upload: (.*\.(gif|png|jpg|html|js|css|eot|svg|ttf|woff))
+  upload: (.*\.(gif|png|jpg|html|js|css|eot|svg|ttf|woff|ico))
