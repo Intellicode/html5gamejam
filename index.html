@@ -2,30 +2,52 @@
 <html> 
 	<head> 
 		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" /> 
-    <title>Box2DJS - Physics Engine for JavaScript</title> 
+    <title>MonkeyFortress by Intellicode for the HTML5 Gamejam</title> 
     <script src="box2d.js"></script> 
     <script src='game/monkeyvscoconut.js'></script> 
 	<link href="style/style.css" rel="stylesheet" type="text/css" /> 
   </head> 
 <body> 
+    <!-- credits to the guys who made the wallpaper at vectorjungle.com from which I derived art -->
 <img class="asset" id="coconutAsset" src="assets/coconut.png">
 <img class="asset" id="grassAsset" src="assets/grass.png">
 <img class="asset" id="monkeyAsset" src="assets/monkey.png">
 <img class="asset" id="brickAsset" src="assets/brick.png">
+<img class="asset" id="goldAsset" src="assets/gold.png">
+<img class="asset" id="silverAsset" src="assets/silver.png">
+<img class="asset" id="bronzeAsset" src="assets/bronze.png">
 <div id="container"> 
-    <img src="assets/logo.png" id="logo">
+    <h1 id="logo">MonkeyFortress <small>By tom@intellicode.nl</h1>
+    
     <div id="canvasContainer">
         <canvas id="canvas" width='480' height='315' ></canvas> 
         <div id="overlay">
             <span id="scoreLabel">Score: <span id="score"></span></span>
+            <span id="medalBar"><img src="assets/gold.png"> <span id="goldMedals"></span>
+            <img src="assets/silver.png"> <span id="silverMedals"></span> <img src="assets/bronze.png"> <span id="bronzeMedals"></span></span>
              <span id="levelLabel">Level: <span id="level"></span></span>
              <a id="readyButton">Ready</a>
         </div>
         <div id="lose">
-            <h1>Hahaha NOOB, try again?</h1>
+           
         </div>
+          <div class="popover" id="losePopover">
+                <h1>You lose!</h1>
+                <p>Don't let the monkey get hit!<br/> Click to continue..</p>
+            </div>
          <div id="win">
-            <h1>Nice...next level!</h1>
+            
+        </div>
+        <div class="popover" id="winPopover">
+                <h1>Nice...next level!</h1>
+                <p><span style="display:none;" id="medal"></span>Click to continue..</p>
+        </div>
+        <div style="display:block;" id="tipPopover">
+            <div id="tip">
+                <h1>tip</h1>
+                <p>Protect the monkey from falling coconuts, build him a fortress where he can hide and hit "Ready". Be careful, the stones hurt too!</p>
+                
+            </div>
         </div>
     </div>
 </div>

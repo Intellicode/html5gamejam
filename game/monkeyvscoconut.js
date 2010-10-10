@@ -47,7 +47,7 @@ function Monkey() {
 Monkey.create = function(world, x, y, fixed) {
     	var ballSd = new b2CircleDef();
     	if (!fixed) ballSd.density = 1.0;
-    	ballSd.radius = 14 || 10;
+    	ballSd.radius = 12 || 10;
     	ballSd.restitution = 0.2;
     	var ballBd = new b2BodyDef();
     	ballBd.AddShape(ballSd);
@@ -129,7 +129,8 @@ Stone.prototype.createPoly = function(world, x, y, points, fixed) {
 */
 var monkey;
 Event.observe(window, 'load', function() {
-	level(1);
+    init();
+	level(currentLevel);
 	ctx = $('canvas').getContext('2d');
 	var canvasElm = $('canvas');
 	canvasWidth = parseInt(canvasElm.width);
@@ -138,13 +139,17 @@ Event.observe(window, 'load', function() {
 	canvasLeft = parseInt(canvasElm.style.left);
 	Event.observe('overlay', 'click', function(e) {
 		//setupNextWorld();
-		var body = $('container');
-		var offset = body.positionedOffset(canvasElm);
-		var x = offset[0];
-		var y = offset[1];
-		if( Event.pointerY(e) - (y+100) > 100)
-		Stone.create(world,  Event.pointerX(e)  - x,  Event.pointerY(e) - (y+100),16,16, false);
-		score--;
+		if(!started) {
+    		var body = $('container');
+    		var offset = body.positionedOffset(canvasElm);
+    		var x = offset[0];
+    		var y = offset[1];
+    		if( Event.pointerY(e) - (y+100) > 100) {
+    		    Stone.create(world,  Event.pointerX(e)  - (x+110),  Event.pointerY(e) - (y+130),16,16, false);
+    		    score--;
+    		    bricksUsed++;
+    		}
+		}
 	    
 	});
 	Event.observe('canvas', 'contextmenu', function(e) {
@@ -155,13 +160,24 @@ Event.observe(window, 'load', function() {
 	Event.observe('lose', 'click', function(e) {
 		closeLose();
 	});
+	Event.observe('losePopover', 'click', function(e) {
+		closeLose();
+	});
 	
 	Event.observe('win', 'click', function(e) {
 		closeWin();
 	});
+	Event.observe('winPopover', 'click', function(e) {
+		closeWin();
+	});
+	Event.observe('tipPopover', 'click', function(e) {
+		$('tipPopover').style.display = "none";
+	});
 	
 	Event.observe('readyButton', 'click', function(e) {
 		Coconut.fallDownAll();
+		if(window.webkitNotifications)
+		    window.webkitNotifications.requestPermission();
 	});
 	step();
 });
@@ -266,15 +282,23 @@ var coconutCounter = 0;
 var gameLoop;
 var score = 50;
 var started = false;
+var bricksUsed = 0;
+var notifications = false;
+var clear = false;
+var coconutsGoneAt = 0;
+var winTimeout = 0;
 function step(cnt) {
 	var stepping = false;
-	var timeStep = 1.0/60;
+	var timeStep = 1.0/24;
 	var iteration = 1;
 	world.Step(timeStep, iteration);
 	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
 	drawWorld(world, ctx);
 	$('score').innerHTML = score;
-	
+	$('level').innerHTML = currentLevel;
+	$('goldMedals').innerHTML = goldMedals;
+	$('silverMedals').innerHTML = silverMedals;
+	$('bronzeMedals').innerHTML = bronzeMedals;
 	if(world.GetContactList() != null) {
 	    var contact = world.GetContactList();
 	    var gameObject1 = contact.GetShape1().m_body.gameObject;
@@ -301,7 +325,11 @@ function step(cnt) {
 	    
 	    if(checkPair(name1, name2, COCONUT_NAME, BRICK_NAME)) {
 	        var vec2 = new b2Vec2();
-	        if(Math.abs(body1.m_position.y - body2.m_position.y) <10) {
+	        var coconut = getObjectWithName(COCONUT_NAME,body1, body2);
+	        var brick = getObjectWithName(BRICK_NAME,body1, body2);
+	        console.log("Brick:"+brick.m_position.y);
+	        console.log("Coconut:"+coconut.m_position.y);
+	        if((coconut.m_position.y+5) > brick.m_position.y ) {
     	        body1.m_position.x = 4000;
     	        body2.m_position.x = 4000;
     	        if(!body1.IsFrozen())
@@ -310,10 +338,9 @@ function step(cnt) {
     	        body2.Freeze();
             } else {
                 var vec2 = new b2Vec2();
-    	        var obj =  getObjectWithName(COCONUT_NAME,body1, body2);
-    	        if(obj.m_position.x > 240) vec2.Set(BRICK_SPEED,0);
+    	        if(coconut.m_position.x > 240) vec2.Set(BRICK_SPEED,0);
     	        else vec2.Set(-1*BRICK_SPEED,0);
-    	        obj.SetLinearVelocity(vec2);
+    	        coconut.SetLinearVelocity(vec2);
             }
 	        
 	    }
@@ -325,10 +352,20 @@ function step(cnt) {
          if(checkPair(name1, name2, BRICK_NAME,MONKEY_NAME)) {
 	        lose();
         }
-	    if(liveCoconuts  == 0 && started)
+        var date = new Date();
+        var time = date.getTime();
+	    if(liveCoconuts  == 0 && started && !clear) {
+	        clear = true;
+	        
+	        coconutsGoneAt = time
+	        winTimeout = time+1000;
+	    } 
+	    
+	    if(clear && time  > winTimeout) {
 	        win();
+        }
 	}
-	gameLoop = setTimeout('step(' + (cnt || 0) + ')', 10);
+	gameLoop = setTimeout('step(' + (cnt || 0) + ')', 16);
 }
 
 function checkPair(name1, name2, expected1, expected2) {
@@ -390,39 +427,88 @@ function clearWorld() {
 }
 
 function win() {
-     $('win').style.display = "block";
+     if(started) {
+        $('win').style.display = "block";
+        $('winPopover').style.display = "block";
+        if(bricksUsed <= (currentLevel)) {
+           $('medal').innerHTML = 'Gold';
+           window.localStorage["goldMedals"] = ++goldMedals;
+           if(window.webkitNotifications)
+            n=window.webkitNotifications.createNotification($('goldAsset').src, 'You won a medal', 'Gold');
+        } else if(bricksUsed <= (currentLevel*2)) {
+           $('medal').innerHTML = 'Silver'; 
+           window.localStorage["silverMedals"] = ++silverMedals;
+           if(window.webkitNotifications)
+            n=  window.webkitNotifications.createNotification($('silverAsset').src, 'You won a medal', 'Silver');
+        } else {
+           $('medal').innerHTML = 'Bronze'; 
+           window.localStorage["bronzeMedals"] = ++bronzeMedals;
+           window.webkitNotifications
+            n= window.webkitNotifications.createNotification($('bronzeAsset').src, 'You won a medal', 'Bronze');
+        }
+        if(window.webkitNotifications)
+            if(window.webkitNotifications.checkPermission() != 1)
+                n.show();
+    } 
+    started = false;
     gameLoop = null;
 }
 
 function closeWin() {
       $('win').style.display = "none";
+      $('winPopover').style.display = "none";
+       score = 50 + score;
     level(++currentLevel);
+   
 }
 
 function lose() {
-    $('lose').style.display = "block";
-    started = false;
-    gameLoop = null;
+   
+        clear = false;
+        $('lose').style.display = "block";
+        $('losePopover').style.display = "block";
+        started = false;
+        gameLoop = null;
+    
 }
 
 function closeLose() {
      $('lose').style.display = "none";
+     $('losePopover').style.display = "none";
     level(currentLevel);
 }
 
 function level(level) {
     started = false;
+    bricksUsed = 0;
     currentLevel = level;
+    clear = false;
+    window.localStorage["currentLevel"] = currentLevel; 
     coconuts = [];
     liveCoconuts = 0;
     world = createWorld();
-    monkey = Monkey.create(world, 240, 130, false);
+    if(currentLevel > 6) {
+        monkey = Monkey.create(world, 320, 130, false);
+        monkey = Monkey.create(world, 140, 130, false);
+    } else {
+        monkey = Monkey.create(world, 240, 130, false);
+    }
     width = 400/level;
     for(var i = 0;i<level;i++) {
         var rand = Math.floor(Math.random()*10)
         Coconut.add(Coconut.create(world, (1+i)*width, 10, true));
-    }
+    }   
+}
 
+function init() {
+    currentLevel = window.localStorage["currentLevel"];
     
+    if(currentLevel == null) currentLevel = 1;
     
+    goldMedals = window.localStorage["goldMedals"];
+    if(goldMedals == null) goldMedals = 0;
+    silverMedals = window.localStorage["silverMedals"];
+    if(silverMedals == null) silverMedals = 0;
+    bronzeMedals = window.localStorage["bronzeMedals"];
+    if(bronzeMedals == null) bronzeMedals = 0;
 }
