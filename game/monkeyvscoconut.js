@@ -34,6 +34,7 @@ Stone.create = function(world, x, y, width, height, fixed) {
 	boxBd.position.Set(x,y);
 	body = world.CreateBody(boxBd);
 	body.gameObject = new Stone();
+	objectCounter++;
 	return body;
 }
 
@@ -54,6 +55,7 @@ Monkey.create = function(world, x, y, fixed) {
     	ballBd.position.Set(x,y);
     	var body = world.CreateBody(ballBd);
     	body.gameObject = new Monkey();
+    	objectCounter++;
     	return body;
     };
     
@@ -73,6 +75,7 @@ Coconut.create = function(world, x, y, fixed) {
     	ballBd.position.Set(x,y);
     	var body = world.CreateBody(ballBd);
     	body.gameObject = new Coconut();
+    	objectCounter++;
     	return body;
     };
 Coconut.add = function(coconut) {
@@ -287,14 +290,21 @@ var notifications = false;
 var clear = false;
 var coconutsGoneAt = 0;
 var winTimeout = 0;
+var objectCounter = 0;
+var oldTime = (new Date()).getTime();
 function step(cnt) {
+    
 	var stepping = false;
 	var timeStep = 1.0/24;
 	var iteration = 1;
+	var oldt = (new Date()).getTime();
 	world.Step(timeStep, iteration);
-	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	drawWorld(world, ctx);
-	$('score').innerHTML = score;
+	var newt = (new Date()).getTime();
+	var dt = newt - oldt
+	$('physics').innerHTML = dt;
+	//ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	//drawWorld(world, ctx);
+	//$('score').innerHTML =1/ (dt/1000);
 	$('level').innerHTML = currentLevel;
 	$('goldMedals').innerHTML = goldMedals;
 	$('silverMedals').innerHTML = silverMedals;
@@ -365,6 +375,11 @@ function step(cnt) {
 	        win();
         }
 	}
+	newT = (new Date()).getTime();
+	$('fps').innerHTML = Math.round(1/ ((newT-oldTime)/1000));
+	oldTime = newT;
+	$('objects').innerHTML = objectCounter;
+	
 	gameLoop = setTimeout('step(' + (cnt || 0) + ')', 16);
 }
 
@@ -488,10 +503,10 @@ function level(level) {
     liveCoconuts = 0;
     world = createWorld();
     if(currentLevel > 6) {
-        monkey = Monkey.create(world, 320, 130, false);
-        monkey = Monkey.create(world, 140, 130, false);
+       // monkey = Monkey.create(world, 320, 130, false);
+       // monkey = Monkey.create(world, 140, 130, false);
     } else {
-        monkey = Monkey.create(world, 240, 130, false);
+      //  monkey = Monkey.create(world, 240, 130, false);
     }
     width = 400/level;
     for(var i = 0;i<level;i++) {
