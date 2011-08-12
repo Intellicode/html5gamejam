@@ -179,8 +179,8 @@ Event.observe(window, 'load', function() {
 	
 	Event.observe('readyButton', 'click', function(e) {
 		Coconut.fallDownAll();
-		if(window.webkitNotifications)
-		    window.webkitNotifications.requestPermission();
+	//	if(window.webkitNotifications)
+	//	    window.webkitNotifications.requestPermission();
 	});
 	step();
 });
@@ -297,13 +297,13 @@ function step(cnt) {
 	var stepping = false;
 	var timeStep = 1.0/24;
 	var iteration = 1;
-	var oldt = (new Date()).getTime();
+	//var oldt = (new Date()).getTime();
 	world.Step(timeStep, iteration);
-	var newt = (new Date()).getTime();
-	var dt = newt - oldt
-	$('physics').innerHTML = dt;
-	//ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-	//drawWorld(world, ctx);
+//var newt = (new Date()).getTime();
+	// dt = newt - oldt
+//	$('physics').innerHTML = dt;
+	ctx.clearRect(0, 0, canvasWidth, canvasHeight);
+	drawWorld(world, ctx);
 	//$('score').innerHTML =1/ (dt/1000);
 	$('level').innerHTML = currentLevel;
 	$('goldMedals').innerHTML = goldMedals;
@@ -375,10 +375,10 @@ function step(cnt) {
 	        win();
         }
 	}
-	newT = (new Date()).getTime();
-	$('fps').innerHTML = Math.round(1/ ((newT-oldTime)/1000));
-	oldTime = newT;
-	$('objects').innerHTML = objectCounter;
+//newT = (new Date()).getTime();
+//	$('fps').innerHTML = Math.round(1/ ((newT-oldTime)/1000));
+//oldTime = newT;
+//	$('objects').innerHTML = objectCounter;
 	
 	gameLoop = setTimeout('step(' + (cnt || 0) + ')', 16);
 }
@@ -448,22 +448,13 @@ function win() {
         if(bricksUsed <= (currentLevel)) {
            $('medal').innerHTML = 'Gold';
            window.localStorage["goldMedals"] = ++goldMedals;
-           if(window.webkitNotifications)
-            n=window.webkitNotifications.createNotification($('goldAsset').src, 'You won a medal', 'Gold');
         } else if(bricksUsed <= (currentLevel*2)) {
            $('medal').innerHTML = 'Silver'; 
            window.localStorage["silverMedals"] = ++silverMedals;
-           if(window.webkitNotifications)
-            n=  window.webkitNotifications.createNotification($('silverAsset').src, 'You won a medal', 'Silver');
         } else {
            $('medal').innerHTML = 'Bronze'; 
            window.localStorage["bronzeMedals"] = ++bronzeMedals;
-           window.webkitNotifications
-            n= window.webkitNotifications.createNotification($('bronzeAsset').src, 'You won a medal', 'Bronze');
         }
-        if(window.webkitNotifications)
-            if(window.webkitNotifications.checkPermission() != 1)
-                n.show();
     } 
     started = false;
     gameLoop = null;
@@ -503,10 +494,10 @@ function level(level) {
     liveCoconuts = 0;
     world = createWorld();
     if(currentLevel > 6) {
-       // monkey = Monkey.create(world, 320, 130, false);
-       // monkey = Monkey.create(world, 140, 130, false);
+        monkey = Monkey.create(world, 320, 130, false);
+        monkey = Monkey.create(world, 140, 130, false);
     } else {
-      //  monkey = Monkey.create(world, 240, 130, false);
+        monkey = Monkey.create(world, 240, 130, false);
     }
     width = 400/level;
     for(var i = 0;i<level;i++) {

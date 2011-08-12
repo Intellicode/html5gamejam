@@ -1,0 +1,16 @@
+{
+  "name": "Monkey Fortress",
+  "description": "Protect the monkey from falling blocks",
+  "version": "1",
+  "app": {
+    "urls": [
+      "*://html5.intellicode.nl"
+    ],
+    "launch": {
+      "web_url": "http://html5.intellicode.nl"
+    }
+  },
+  "icons": {
+    "128": "icon_128.png"
+  }
+}
