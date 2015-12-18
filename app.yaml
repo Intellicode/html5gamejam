@@ -1,7 +1,8 @@
-application: html5gamejamnl
+application: html5gamejam-1163
 version: 2
-runtime: python
+runtime: python27
 api_version: 1
+threadsafe: yes
 
 handlers:
 - url: /
