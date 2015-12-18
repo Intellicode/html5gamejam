@@ -1,4 +1,3 @@
- 
 /* Graublau Sans Web (www.fonts.info) */
 @font-face {
 	font-family: 'QuickEndJerkRegular';
@@ -9,9 +8,22 @@
 }
 
 html, body {
-height: 100%;
+  height: 100%;
 }
 body {background:url(../assets/background.png);background-size:100%;font:18px bold arial,sans-serif;color:#fff}
+
+a {
+  color: #eee;
+  font-weight: bold;
+}
+
+.description {
+  width: 480px;
+  margin: 10px auto;
+  padding: 10px;
+  background: rgba(0, 0, 0, 0.8);
+}
+
 #logo {
    font:50px 'QuickEndJerkRegular', sans-serif;
    color:#fff;
@@ -83,18 +95,17 @@ body {background:url(../assets/background.png);background-size:100%;font:18px bo
     opacity:0.9;
     background:-webkit-gradient(linear, left top, left bottom, color-stop(0%,#727272), color-stop(100%,#000000)); /* webkit */;
 }
-.popover h1{
+.popover h1 {
     font-size:16px;
     line-height:16px;
     margin:2px;
 }
 
-.popover p{
+.popover p {
     font-size:12px;
-    
 }
 
-#scoreLabel {
+scoreLabel {
     position:absolute;
     top:10px;
     left:10px:
@@ -106,15 +117,15 @@ body {background:url(../assets/background.png);background-size:100%;font:18px bo
     top:30px;
     left:10px;
     cursor:pointer;
-    
+
 }
-#debug {
+#d {
    position:absolute;
     top:70px;
     left:10px;
-    cursor:pointer;  
+    cursor:pointer;
 }
-#levelLabel {
+#levelbel {
     position:absolute;
     top:10px;
     right:10px;
@@ -141,18 +152,17 @@ body {background:url(../assets/background.png);background-size:100%;font:18px bo
     left top,
     color-stop(0.41, rgb(54,84,25)),
     color-stop(0.09, rgb(41,56,20))
-);
+    );
 
     border:2px solid rgb(41,56,20);
 }
 #readyButton:hover {
-        background:-webkit-gradient(
+    background:-webkit-gradient(
     linear,
     left bottom,
     left top,
     color-stop(0.41, rgb(41,56,20) ),
     color-stop(0.09, rgb(54,84,25)));
-
 }
 
 #tip {
